@@ -1,7 +1,10 @@
 import axios from "axios"
 import { useState } from "react"
+import { Navigate, useNavigate } from "react-router-dom"
 
 const Login = () => {
+
+    const navigation = useNavigate()
 
     const [user, setUser] = useState({
         email:"",
@@ -13,9 +16,12 @@ const Login = () => {
         axios.post(`https://reqres.in/api/login`,user)
         .then(data => {
             localStorage.setItem("tokenCriptoMarket", data.data.token)
+            navigation("/")
         })
         .catch(e => console.error(e))
     }
+
+    if ( localStorage.getItem("tokenCriptoMarket")) return <Navigate to="/" />
 
     return (
         <div>
