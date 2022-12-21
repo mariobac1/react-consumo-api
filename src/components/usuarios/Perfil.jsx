@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { Usercontext } from "./context/UserContext"
+import { Usercontext } from "../../context/UserContext"
 
 const Perfil = () => {
 
