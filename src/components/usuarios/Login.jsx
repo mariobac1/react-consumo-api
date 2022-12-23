@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useState } from "react"
 import { Navigate, useNavigate } from "react-router-dom"
+import "./Login.css"
 
 const Login = () => {
 
@@ -11,20 +12,29 @@ const Login = () => {
         password:""
     })
 
+    const [cargando, setCargando ] =useState(false)
+    const [ error, setError ] = useState()
+
     const submit = (e) => {
         e.preventDefault()
+        setCargando(true)
         axios.post(`https://reqres.in/api/login`,user)
         .then(data => {
+            setCargando(false)
             localStorage.setItem("tokenCriptoMarket", data.data.token)
             navigation("/")
         })
-        .catch(e => console.error(e))
+        .catch(e => {
+            setCargando(false)
+            console.error(e)
+            setError(e.response.data.error)
+        })
     }
 
     if ( localStorage.getItem("tokenCriptoMarket")) return <Navigate to="/" />
 
     return (
-        <div>
+        <div className="login-container">
             <h1>Incio de sesión</h1>
             <form onSubmit={submit}>
                 <div className="field">
@@ -47,9 +57,15 @@ const Login = () => {
                     }} type="password" name="password" />
                 </div>
                 <div className="submit">
-                    <input type="submit" value="Ingresar" />
+                    <input 
+                    type="submit" 
+                    value={cargando ? "cargando..." : "Ingresar"}
+                    className="link"
+                    />
                 </div>
             </form>
+            {
+                error && <span className="error">Error: {error}</span>}
         </div>
     )
 }
